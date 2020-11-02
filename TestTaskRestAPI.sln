@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestTaskRestAPI", "TestTaskRestAPI\TestTaskRestAPI.csproj", "{4308B18B-FA77-4E8A-BD5A-9A9543C03D4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTaskRestAPITests", "TestTaskRestAPITests\TestTaskRestAPITests.csproj", "{5616EA1C-9F42-4871-B4D6-1120C8961C83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestTaskRestAPITests", "TestTaskRestAPITests\TestTaskRestAPITests.csproj", "{5616EA1C-9F42-4871-B4D6-1120C8961C83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{37690EE2-76AE-4319-9073-5F41019AE894}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{5616EA1C-9F42-4871-B4D6-1120C8961C83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5616EA1C-9F42-4871-B4D6-1120C8961C83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5616EA1C-9F42-4871-B4D6-1120C8961C83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37690EE2-76AE-4319-9073-5F41019AE894}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37690EE2-76AE-4319-9073-5F41019AE894}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37690EE2-76AE-4319-9073-5F41019AE894}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37690EE2-76AE-4319-9073-5F41019AE894}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
