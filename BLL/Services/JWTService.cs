@@ -12,19 +12,15 @@ using System.Text;
 
 namespace BLL.Services
 {
-    public class JWTService : IJWT
+    public class JWTService :  IJWTService
     {
+        public IUnitOfWork UnitOfWork { get; protected set; }
         private readonly IConfiguration _configuration;
-        IUnitOfWork UnitOfWork { get; set; }
 
-        public JWTService(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
-        public JWTService(IUnitOfWork unitOfWork)
+        public JWTService(IUnitOfWork unitOfWork, IConfiguration configuration)
         {
             UnitOfWork = unitOfWork;
+            _configuration = configuration;
         }
 
         public string Login(UserDTO user)
@@ -44,7 +40,7 @@ namespace BLL.Services
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
 
             var date = DateTime.UtcNow;
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSecurityKey"])); //
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSecurityKey"])); 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expiry = DateTime.Now.AddDays(Convert.ToInt32(_configuration["JwtExpiryInDays"]));
 

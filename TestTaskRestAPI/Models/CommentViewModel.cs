@@ -2,16 +2,15 @@
 
 namespace TestTaskRestAPI.Models
 {
-    public class DisplayPostModel
+    public class CommentViewModel
     {
         [Required]
         public int Id { get; set; }
         [Required]
-        public string UserName { get; set; }
+        public int PostId { get; set; }
         [Required]
-        public string Title { get; set; }
+        public int UserId { get; set; }
         [Required]
         public string Content { get; set; }
-        public string Image { get; set; }
     }
 }

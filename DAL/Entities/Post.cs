@@ -15,7 +15,7 @@ namespace DAL.Entities
         public string Image { get; set; }
 
         [Required]
-        public int IdUser { get; set; }
+        public int UserId { get; set; }
         public User User { get; set; }
 
         ICollection<Comment> Comments { get; set; }

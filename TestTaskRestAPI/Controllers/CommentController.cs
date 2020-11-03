@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TestTaskRestAPI.Interfaces;
+﻿using AutoMapper;
+using BLL;
+using BLL.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Net;
 using TestTaskRestAPI.Models;
 
 
@@ -23,7 +27,12 @@ namespace TestTaskRestAPI.Controllers
         {
             try
             {
-                return Ok(_commentService.GetComments());
+                var comments = _commentService.GetComments();
+                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CommentDTO, CommentViewModel>()).CreateMapper();
+                var result = mapper.Map<IEnumerable<CommentDTO>, List<CommentViewModel>>(comments);
+                if (result == null)
+                    return NotFound();
+                return Ok(result);
             }
             catch
             {
@@ -37,7 +46,12 @@ namespace TestTaskRestAPI.Controllers
         {
             try
             {
-                return Ok(_commentService.GetComment(id));
+                var comment = _commentService.GetComment(id);
+                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CommentDTO, CommentViewModel>()).CreateMapper();
+                var result = mapper.Map<CommentDTO, CommentViewModel>(comment);
+                if (result == null)
+                    return NotFound();
+                return Ok(result);
             }
             catch
             {
@@ -45,13 +59,18 @@ namespace TestTaskRestAPI.Controllers
             }
         }
 
-        // GET api/<Comment>/5
+        // GET api/Comment/<GetComments>/5
         [HttpGet("GetComments/{id}")]
         public ActionResult GetPostsComments(int id)
         {
             try
             {
-                return Ok(_commentService.GetCommentsByPostId(id));
+                var comment = _commentService.GetCommentsByPostId(id);
+                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<UserCommentDTO, UserCommentViewModel>()).CreateMapper();
+                var result = mapper.Map<IEnumerable<UserCommentDTO>, List<UserCommentViewModel>>(comment);
+                if (result == null)
+                    return NotFound();
+                return Ok(result);
             }
             catch
             {
@@ -61,11 +80,13 @@ namespace TestTaskRestAPI.Controllers
 
         // POST api/<Comment>
         [HttpPost]
-        public ActionResult CreateComment([FromBody] CommentModel comment)
+        public ActionResult CreateComment([FromBody] CommentViewModel comment)
         {
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CommentViewModel, CommentDTO>()).CreateMapper();
+            CommentDTO result = mapper.Map<CommentViewModel, CommentDTO>(comment);
             try
             {
-                _commentService.InsertComment(comment);
+                _commentService.InsertComment(result);
                 return Ok();
             }
             catch
@@ -77,11 +98,14 @@ namespace TestTaskRestAPI.Controllers
 
         // PUT api/<Comment>
         [HttpPut]
-        public ActionResult Update([FromBody] CommentModel comment)
+        public ActionResult Update([FromBody] CommentViewModel comment)
         {
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CommentViewModel, CommentDTO>()).CreateMapper();
+            CommentDTO result = mapper.Map<CommentViewModel, CommentDTO>(comment);
+
             try
             {
-                _commentService.UpdateComment(comment);
+                _commentService.UpdateComment(result);
                 return Ok();
             }
             catch

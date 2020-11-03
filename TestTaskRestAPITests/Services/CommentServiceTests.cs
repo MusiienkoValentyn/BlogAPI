@@ -1,40 +1,48 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TestTaskRestAPI.Services;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TestTaskRestAPI.Interfaces;
 using System.Linq;
+using BLL.Services;
+using DAL.Interfaces;
+using BLL;
+using DAL.Entities;
+using TestTaskRestAPI.Controllers;
+using BLL.Interfaces;
+using Moq;
 
 namespace TestTaskRestAPI.Services.Tests
 {
     [TestClass()]
     public class CommentServiceTests
     {
+        private Mock<ICommentService> service= new Mock<ICommentService>();
+
         [TestMethod()]
-        public void GetCommentsByPostId_NotExistPost_ZeroCommentsReturned()
+        public void CountComments_AllComments_TwoCommentsReturned()
         {
             // arrange
-            ICommentService commentService = new CommentService();
+            var mock = new Mock<ICommentService>();
+            mock.Setup(r => r.GetComments());
+            var controller = new CommentController(mock.Object);
 
             // act
-            var res = commentService.GetCommentsByPostId(0).Count();
+            var res = controller.Get();
 
             // assert
-            Assert.AreEqual(res, 0);
+            
+            Assert.AreEqual(res, 2);
         }
 
         [TestMethod()]
         public void GetCommentContent_ParamIs312_ItIsAwesomePlaceReturned()
         {
+            
             // arrange
-            ICommentService commentService = new CommentService();
 
             // act
-            var res = commentService.GetComment(312).Content;
+           
 
             // assert
-            Assert.AreEqual(res, "It is awesome place!!!");
+          
+           // Assert.AreEqual(res, "It is awesome place");
         }
     }
 }

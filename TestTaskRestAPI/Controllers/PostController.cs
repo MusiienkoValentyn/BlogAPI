@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using BLL;
+using BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using TestTaskRestAPI.Models;
 
 
@@ -20,23 +24,44 @@ namespace TestTaskRestAPI.Controllers
         [HttpGet]
         public ActionResult Get()
         {
-            return Ok(_postService.GetPosts());
+            try
+            {
+                var posts = _postService.GetPosts();
+                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<PostDTO, PostViewModel>()).CreateMapper();
+                var result = mapper.Map<IEnumerable<PostDTO>, List<PostViewModel>>(posts);
+                if (result == null)
+                    return NotFound();
+                return Ok(result);
+            }
+            catch
+            {
+
+                throw;
+            }
+
         }
 
         // GET api/<Post>/5
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            return Ok(_postService.GetPost(id));
+            var post = _postService.GetPost(id);
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<PostDTO, PostViewModel>()).CreateMapper();
+            var result = mapper.Map<PostDTO, PostViewModel>(post);
+            if (result == null)
+                return NotFound();
+            return Ok(result);
         }
 
         // POST api/<Post>
         [HttpPost]
-        public ActionResult Create([FromForm] PostModel post)
+        public ActionResult Create([FromForm] PostViewModel post)
         {
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<PostViewModel, PostDTO>()).CreateMapper();
+            PostDTO result = mapper.Map<PostViewModel, PostDTO>(post);
             try
             {
-                _postService.InsertPost(post);
+                _postService.InsertPost(result);
                 return Ok();
             }
             catch
@@ -48,11 +73,13 @@ namespace TestTaskRestAPI.Controllers
 
         // PUT api/<Post>
         [HttpPut]
-        public ActionResult Update([FromForm] PostModel post)
+        public ActionResult Update([FromForm] PostViewModel post)
         {
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<PostViewModel, PostDTO>()).CreateMapper();
+            PostDTO result = mapper.Map<PostViewModel, PostDTO>(post);
             try
             {
-                _postService.UpdatePost(post);
+                _postService.UpdatePost(result);
                 return Ok();
             }
             catch
@@ -82,7 +109,14 @@ namespace TestTaskRestAPI.Controllers
         [HttpGet("GetPosts&Comments")]
         public ActionResult GetPostsAndComments()
         {
-            return Ok(_postService.GetPostsAndComments());
+            try
+            {
+                return Ok(_postService.GetPostsAndComments());
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }

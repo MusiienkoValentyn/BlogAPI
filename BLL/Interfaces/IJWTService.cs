@@ -2,7 +2,7 @@
 
 namespace BLL.Interfaces
 {
-    public interface IJWT
+    public interface IJWTService
     {
         string Login(UserDTO user);
     }

@@ -1,4 +1,6 @@
 ﻿using System;
+using BLL;
+using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -8,18 +10,18 @@ namespace TestTaskRestAPI.Authorization
     [ApiController]
     public class JWTController : ControllerBase
     {
-        private IJWT _jwt;
+        private IJWTService _jwt;
 
-        public JWTController(IJWT jwt)
+        public JWTController(IJWTService jwt)
         {
             _jwt = jwt;
         }
 
         [HttpPost]
-        public IActionResult Login([FromBody]LoginModel login)
+        public IActionResult Login([FromBody]UserDTO user)
         {
 
-            var token = _jwt.Login(login.UserName,login.Password);
+            var token = _jwt.Login(user);
 
             if(token==null||token==String.Empty)
             {

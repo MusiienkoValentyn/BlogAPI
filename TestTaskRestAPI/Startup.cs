@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.Interfaces;
+using BLL.Services;
+using DAL.Context;
+using DAL.Interfaces;
+using DAL.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,8 +21,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using TestTaskRestAPI.Interfaces;
-using TestTaskRestAPI.Services;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace TestTaskRestAPI
 {
@@ -36,6 +41,14 @@ namespace TestTaskRestAPI
             services.AddResponseCaching();
 
             services.AddControllers();
+
+            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
+            services.AddDbContext<BlogContext>(options =>
+             options.UseSqlServer(Configuration.GetConnectionString("BlogContext")));
+
+
+           
 
             services.AddAuthentication(x =>
             {
@@ -57,11 +70,11 @@ namespace TestTaskRestAPI
                  });
 
 
-            services.AddScoped<IJWT, JWTService>();
-            services.AddSingleton<ICommentService, CommentService>();
-            services.AddSingleton<IPostService, PostService>();
+            services.AddTransient<ICommentService, CommentService>();
+            services.AddTransient<IPostService, PostService>();
+            services.AddTransient<IJWTService, JWTService>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
-           
 
             services.AddSwaggerGen(setup =>
             {

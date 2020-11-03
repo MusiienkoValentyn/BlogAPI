@@ -1,6 +1,7 @@
 ﻿using DAL.Context;
 using DAL.Entities;
 using DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,9 +15,9 @@ namespace DAL.Repositories
         private Repository<Post> postRepository;
         private Repository<User> userRepository;
 
-        public UnitOfWork(BlogContext db)
+        public UnitOfWork(DbContextOptions<BlogContext> connectionString)
         {
-            this.db = db;
+            db = new BlogContext(connectionString);
         }
 
         public IRepository<Comment> Comment

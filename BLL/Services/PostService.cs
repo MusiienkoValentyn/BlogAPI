@@ -12,7 +12,7 @@ using BLL.DTO;
 
 namespace BLL.Services
 {
-    public class PostService :BaseService<PostDTO, Post>, IPostService
+    public class PostService : BaseService<PostDTO, Post>, IPostService
     {
 
         public PostService(IUnitOfWork unitOfWork) : base(unitOfWork)
@@ -48,8 +48,8 @@ namespace BLL.Services
         private List<UserCommentDTO> GetComments(PostDTO postModel)
         {
             var res = from comment in UnitOfWork.Comment.GetAll()
-                      join post in UnitOfWork.Post.GetAll() on comment.IdPost equals post.Id
-                      join user in UnitOfWork.User.GetAll() on comment.IdUser equals user.Id
+                      join post in UnitOfWork.Post.GetAll() on comment.PostId equals post.Id
+                      join user in UnitOfWork.User.GetAll() on comment.UserId equals user.Id
                       where post.Id == postModel.Id
                       select new UserCommentDTO { UserName = user.UserName, Comment = comment.Content }; // Get all comments from 1 post as DetailCommentModel.
 
@@ -69,7 +69,7 @@ namespace BLL.Services
                 postModel = GetPost(item.Id);
 
                 postAndComments = (from post in UnitOfWork.Post.GetAll()
-                                   join user in UnitOfWork.User.GetAll() on post.IdUser equals user.Id
+                                   join user in UnitOfWork.User.GetAll() on post.UserId equals user.Id
                                    where post.Id == postModel.Id
                                    select new PostCommentDTO
                                    {
@@ -92,12 +92,18 @@ namespace BLL.Services
                 throw new ValidationException("Argument is null", nameof(post));
 
             Post postEntity = ToDalEntity(post);
-            postEntity.Image = $"Post{postEntity.Id}";
+            if (post.ImageForm != null)
+                postEntity.Image = $"Post{postEntity.UserId}{DateTime.UtcNow.ToString().Replace(" ", "").Replace(":", "")}.jpeg";
+
             UnitOfWork.Post.Create(postEntity);
 
-            MemoryStream ms = new MemoryStream(post.Image.GetBytes().Result);
+            if (post.ImageForm != null)
+            {
+                MemoryStream ms = new MemoryStream(post.ImageForm.GetBytes().Result);
 
-            Task.Run(() => AddImage.UploadFile(ms, postEntity.Image));
+                Task.Run(() => AddImage.UploadFile(ms, $"Post{postEntity.UserId}{DateTime.UtcNow.ToString().Replace(":","").Replace(" ","")}.jpeg"));
+            }
+            
             UnitOfWork.Save();
         }
 
@@ -113,11 +119,20 @@ namespace BLL.Services
             if (element != null)
             {
                 Post postEntity = ToDalEntity(post);
-                postEntity.Content = element.Content;
-                postEntity.Title = element.Title;
-                postEntity.Image = element.Image;
+                postEntity.Content = post.Content;
+                postEntity.Title = post.Title;
+             
+
+                if (post.ImageForm != null)
+                {
+                    postEntity.Image = $"Post{postEntity.UserId}{DateTime.UtcNow.ToString().Replace(" ", "").Replace(":", "")}.jpeg";
+                    MemoryStream ms = new MemoryStream(post.ImageForm.GetBytes().Result);
+
+                    Task.Run(() => AddImage.UploadFile(ms, postEntity.Image));
+                }
 
                 UnitOfWork.Post.Update(postEntity);
+                UnitOfWork.Save();
             }
             else
                 throw new ValidationException("Comment not found", nameof(post));

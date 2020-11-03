@@ -12,6 +12,7 @@ namespace BLL.Services
 {
     public class CommentService : BaseService<CommentDTO,Comment>, ICommentService
     {
+
         public CommentService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
@@ -46,8 +47,8 @@ namespace BLL.Services
         public IEnumerable<UserCommentDTO> GetCommentsByPostId(int id)
         {
             var res = from comment in UnitOfWork.Comment.GetAll()
-                      join post in UnitOfWork.Post.GetAll() on comment.IdPost equals post.Id
-                      join user in UnitOfWork.User.GetAll() on comment.IdUser equals user.Id
+                      join post in UnitOfWork.Post.GetAll() on comment.PostId equals post.Id
+                      join user in UnitOfWork.User.GetAll() on comment.UserId equals user.Id
                       where post.Id==id
                       select new UserCommentDTO{UserName=user.UserName, Comment=comment.Content }; // Select all comments for 1 post.                                                                                  
 
@@ -70,6 +71,7 @@ namespace BLL.Services
                 throw new ValidationException("Argument is null", nameof(comment));
 
             Comment commentEntity = ToDalEntity(comment);
+            UnitOfWork.Comment.Update(commentEntity);
             UnitOfWork.Save();
         }
     }

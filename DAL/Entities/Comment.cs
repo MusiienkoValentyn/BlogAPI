@@ -10,11 +10,11 @@ namespace DAL.Entities
         public string Content { get; set; }
 
         [Required]
-        public int IdPost { get; set; }
+        public int PostId { get; set; }
         public Post Post { get; set; }
 
         [Required]
-        public int IdUser { get; set; }
+        public int UserId { get; set; }
         public User User { get; set; }
     }
 }

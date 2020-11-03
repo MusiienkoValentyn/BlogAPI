@@ -17,7 +17,7 @@ namespace BLL.Services
             {
                 Directory.CreateDirectory(path);
             }
-            var fullPath=Path.Combine(path, name);
+            var fullPath = Path.Combine(path, name);
             using (FileStream file = new FileStream(fullPath, FileMode.Create))
             {
                 await stream.CopyToAsync(file);
@@ -25,18 +25,18 @@ namespace BLL.Services
         }
 
     }
-}
 
-public static class FormFileExtensions
-{
-    public static async Task<byte[]> GetBytes(this IFormFile formFile)
+
+    public static class FormFileExtensions
     {
-        using (var memoryStream = new MemoryStream())
+        public static async Task<byte[]> GetBytes(this IFormFile formFile)
         {
-            await formFile.CopyToAsync(memoryStream);
-            return memoryStream.ToArray();
+            using (var memoryStream = new MemoryStream())
+            {
+                await formFile.CopyToAsync(memoryStream);
+                return memoryStream.ToArray();
+            }
         }
-    }
 
-}
+    }
 }
