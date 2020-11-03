@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BLL.Services
@@ -23,7 +21,6 @@ namespace BLL.Services
                 await stream.CopyToAsync(file);
             }
         }
-
     }
 
 

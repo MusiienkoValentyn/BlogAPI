@@ -1,9 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
-using BLL.Services;
-using DAL.Interfaces;
-using BLL;
-using DAL.Entities;
 using TestTaskRestAPI.Controllers;
 using BLL.Interfaces;
 using Moq;
