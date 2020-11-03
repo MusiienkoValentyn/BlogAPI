@@ -1,4 +1,4 @@
-﻿namespace TestTaskRestAPI.Exception
+﻿namespace BLL.Exception
 {
     class ValidationException : System.Exception
     {

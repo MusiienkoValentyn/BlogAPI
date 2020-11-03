@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using BLL.Interfaces;
+using DAL.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -6,23 +8,28 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using TestTaskRestAPI.Interfaces;
-using TestTaskRestAPI.Models;
 
-namespace TestTaskRestAPI.Services
+
+namespace BLL.Services
 {
     public class JWTService : IJWT
     {
         private readonly IConfiguration _configuration;
+        IUnitOfWork UnitOfWork { get; set; }
 
         public JWTService(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
-        public string Login(string userName, string password)
+        public JWTService(IUnitOfWork unitOfWork)
         {
-            var login = BlogModel.users.FirstOrDefault(x => x.UserName == userName && x.Password == password);
+            UnitOfWork = unitOfWork;
+        }
+
+        public string Login(UserDTO user)
+        {
+            var login = UnitOfWork.User.GetAll().FirstOrDefault(x => x.UserName == user.UserName && x.Password == user.Password);
 
             if (login == null)
             {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace DAL.Context
+namespace DAL.Entities
 {
     public class User
     {

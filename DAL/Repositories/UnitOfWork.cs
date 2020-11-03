@@ -1,4 +1,5 @@
 ﻿using DAL.Context;
+using DAL.Entities;
 using DAL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -6,11 +7,12 @@ using System.Text;
 
 namespace DAL.Repositories
 {
-    class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private BlogContext db;
         private Repository<Comment> commentRepository;
         private Repository<Post> postRepository;
+        private Repository<User> userRepository;
 
         public UnitOfWork(BlogContext db)
         {
@@ -37,6 +39,15 @@ namespace DAL.Repositories
             }
         }
 
+        public IRepository<User> User
+        {
+            get
+            {
+                if (userRepository == null)
+                    userRepository = new Repository<User>(db);
+                return userRepository;
+            }
+        }
         public void Save()
         {
             db.SaveChanges();
